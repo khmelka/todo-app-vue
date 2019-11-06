@@ -21,21 +21,27 @@
           <span class="helper-text" data-error="Company must not be empty"></span>
       </div>
     <button type="submit" class="waves-effect waves-light btn">
-        Add
+        {{ id ? 'Update' : 'Add'}}
     </button>
   </form>
 </template>
 
 <script>
+
 import PostService from '../PostService';
 const postService = new PostService();
+
 export default {
     name: "Postform",
+    props: {
+        editingJob: Object
+    },
     data(){
-        return {
+        return {        
             // loading:false,
             jobtitle: '',
             company: '',
+            id: null,
             error: {}
         };
     },
@@ -48,7 +54,8 @@ export default {
                 id: this.id
             };
             e.target.reset()
-            postService.writeJob(job)
+            postService
+            .postJob(job)
             .then(res => {
                 // this.loading = false
                 this.jobtitle=""
@@ -56,7 +63,7 @@ export default {
                 this.$emit('postCreated', res.data)
                 console.log("res", res)
             })
-            .catch(err=>console.error(err));
+            .catch(err => console.error(err));
 
             
         },
@@ -72,6 +79,13 @@ export default {
                 return false
             }
             else return true
+        }
+    },
+    watch:{
+        editingJob(job){
+            this.jobtitle = job.jobtitle
+            this.company = job.company
+            this.id = job.id
         }
     }
 }

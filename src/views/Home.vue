@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col s6">
             <!-- Form -->  
-            <Postform  @postCreated="addJob"/>
+            <Postform  @postCreated="addJob" :editingJob="editingJob"/>
         </div>
     </div>
     <div class="row">
@@ -23,8 +23,8 @@
                     <p> {{job.date}} </p>
                 </div>
                 <div class="card-action">
-                    <p class="edit-btn">Edit</p>
-                    <p class="delete-btn">Delete</p>
+                    <a href="#" @click="editJob(job)">Edit</a>  
+                    <a href="#" class="delete-btn" @click="deleteJob(job.id)">Delete</a>
                 </div>
             </div>
         </div>
@@ -44,12 +44,26 @@ export default {
     },
     data(){
         return {
-            jobs: []
+            jobs: [],
+            editingJob: null
         }
     },
     methods: {
         addJob(job) {
             this.jobs.unshift(job)
+        },
+        editJob(job){
+            postService.editJob(job.id)
+            this.editingJob = job
+            console.log(job)
+        },
+        deleteJob(id){
+            postService.deleteJob(id)
+            .then(() => {
+                this.jobs = this.jobs.filter(j => j.id !== id)
+               console.log('post deleted') 
+            })
+            .catch(err => console.error(err))
         }
     },
     created(){
@@ -67,16 +81,27 @@ export default {
 .delete-btn{
     color:red;
 }
+
 .edit-btn{
     color:blue;
 }
+
 .card .card-content .card-title{
     color: green;
     margin-bottom: 0;
 } 
+
 .card .card-content p.timespamp{
     color: #999;
     margin-bottom: 0;
+}
+
+.card{
+    background-color:yellow;
+    display: inline-block;
+    margin: 2rem;
+    width: 300px;
+    height: 300px;
 }
 
 </style>

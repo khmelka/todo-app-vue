@@ -17,11 +17,11 @@ export default class PostService {
     return axios.get(`http://localhost:3000/jobs/${number}`)
   }
 
-  writeJob(job){
-    if(job.id){
+  editJob(job){
       return axios.put(`http://localhost:3000/job/${job.id}`, job)
     } 
-      else 
+   
+  postJob(job){
         return axios.post('http://localhost:3000/jobs', job)
   }
 
